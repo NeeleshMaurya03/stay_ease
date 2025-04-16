@@ -1,28 +1,31 @@
 const mongoose = require('mongoose');
-
 require('dotenv').config();
-let initialized = false;
 
-const connect = async () => {
+let isConnected = false;
+
+const connectDB = async () => {
   mongoose.set('strictQuery', true);
 
-  if (initialized) {
-    console.log('MongoDB already connected');
+  if (isConnected) {
+    console.log('Using existing MongoDB connection');
     return;
   }
 
   try {
-    // Change dbName to 'stayease' here
-    await mongoose.connect(process.env.MONGODB_URI, {
-      dbName: 'stayease', // <-- Update the database name
+    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+      dbName: 'stayease', // Ensure this matches your Atlas database name
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      retryWrites: true,
+      w: 'majority'
     });
-    initialized = true;
-    console.log('MongoDB connected');
+
+    isConnected = conn.connections[0].readyState === 1;
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.log('MongoDB connection error:', error);
+    console.error('MongoDB connection error:', error.message);
+    process.exit(1);
   }
 };
 
-module.exports = { connect };
+module.exports = connectDB;
