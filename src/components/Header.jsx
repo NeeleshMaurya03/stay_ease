@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { UserButton, SignedIn, SignedOut, SignInButton, SignUpButton } from '@clerk/nextjs';
 
+// Move search functionality to a separate component
 const SearchBar = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
@@ -51,6 +52,7 @@ const Header = () => {
         <Suspense fallback={<div className="flex-1 max-w-md mx-6" />}>
           <SearchBar />
         </Suspense>
+
 
         <nav className="flex items-center gap-4 sm:gap-6">
           <Link 
