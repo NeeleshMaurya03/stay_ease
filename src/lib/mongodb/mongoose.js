@@ -1,8 +1,9 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
+require('dotenv').config();
 let initialized = false;
 
-export const connect = async () => {
+const connect = async () => {
   mongoose.set('strictQuery', true);
 
   if (initialized) {
@@ -11,8 +12,9 @@ export const connect = async () => {
   }
 
   try {
+    // Change dbName to 'stayease' here
     await mongoose.connect(process.env.MONGODB_URI, {
-      dbName: 'next-estate',
+      dbName: 'stayease', // <-- Update the database name
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -22,3 +24,5 @@ export const connect = async () => {
     console.log('MongoDB connection error:', error);
   }
 };
+
+module.exports = { connect };
